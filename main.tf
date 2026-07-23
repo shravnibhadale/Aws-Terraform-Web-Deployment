@@ -118,24 +118,8 @@ resource "aws_instance" "web_server" {
   subnet_id              = aws_default_subnet.public_subnet.id
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
   key_name               = aws_key_pair.deployer_key.key_name
-  user_data              = <<-EOF
-    #!/bin/bash
-    sudo apt update -y
-    sudo apt install apache2 -y
-    cd /var/www/html
-    sudo rm -rf *
-    git clone https://github.com/shravnibhadale/Aws-Terraform-Web-Deployment.git .
-    systemctl restart apache2
-  EOF
-  tags = {
-    Name        = "Terraform-Managed-Server"
-    Environment = "Dev"
-  }
+ 
 }
-
-# ==============================================================================
-# OUTPUT BLOCKS
-# ==============================================================================
 
 output "vpc_id" {
   description = "The ID of the default VPC used"
