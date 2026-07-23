@@ -1,6 +1,0 @@
-.terraform/
-*.tfstate
-*.tfstate.*
-.terraform.lock.hcl
-*.pem
-tf-deployer-key.pem
