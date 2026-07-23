@@ -118,22 +118,15 @@ resource "aws_instance" "web_server" {
   subnet_id              = aws_default_subnet.public_subnet.id
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
   key_name               = aws_key_pair.deployer_key.key_name
-
-  # AUTOMATED USER DATA SCRIPT: Automatically builds your web engine on creation
-  user_data = <<-EOF
-              #!/bin/bash
-              # Update packages and install Nginx
-              sudo apt-get update -y
-              sudo apt-get install nginx -y
-
-              # Start and enable Nginx service
-              sudo systemctl start nginx
-              sudo systemctl enable nginx
-
-              # Inject custom landing page
-              echo "<h1>Hello from your Terraform-Managed EC2 Web Server!</h1><p>Deployment Successful.</p>" | sudo tee /var/www/html/index.html
-              EOF
-
+  user_data              = <<-EOF
+    #!/bin/bash
+    sudo apt update -y
+    sudo apt install apache2 -y
+    cd /var/www/html
+    sudo rm -rf *
+    git clone https://github.com/shravnibhadale/Aws-Terraform-Web-Deployment.git .
+    systemctl restart apache2
+  EOF
   tags = {
     Name        = "Terraform-Managed-Server"
     Environment = "Dev"
